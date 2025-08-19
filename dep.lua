@@ -65,7 +65,22 @@ function module.getClosestToMouse()
     return target
 end
 
-function module.objectESP(object,color,text,size)
+function module.getDistanceToObject(object)
+    local character = player.Character 
+    if not character then return end 
+    local hrp = character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end 
+
+    return (object.Position - hrp.Position).Magnitude
+
+end
+
+function module.objectESP(object,color,text,size,maxDistance)
+    local part = Instance.new("Part",object)
+    part.Name = "esp"
+    part.Size = Vector3(0,0,0)
+
+    --Main
     local label = Drawing.new("Text")
 
     label.Visible = true
@@ -81,8 +96,9 @@ function module.objectESP(object,color,text,size)
     c1 = rs.RenderStepped:Connect(function()
         if object and object:IsDescendantOf(workspace) and getgenv().esp then
             local pos, onScreen = camera:WorldToViewportPoint(object.Position + Vector3.new(0, 2, 0))
-            
-            if onScreen then
+            local distance = module.getDistanceToObject(object)
+
+            if onScreen and distance <= (500 or maxDistance) then
                 label.Position = Vector2.new(pos.X, pos.Y)
                 label.Visible = true
             else
@@ -90,6 +106,7 @@ function module.objectESP(object,color,text,size)
             end
         else
             label:Remove()
+            part:Destroy()
             c1:Disconnect()
         end
     end)
