@@ -1,4 +1,7 @@
 local module = {}
+local espConnections = {}
+
+local rs = game:GetService("RunService")
 
 local players = game:GetService("Players")
 local player = players.LocalPlayer
@@ -61,5 +64,44 @@ function module.getClosestToMouse()
 
     return target
 end
+
+function module.objectESP(object,color,text,size)
+    local label = Drawing.new("Text")
+
+    label.Visible = true
+    label.Center = true
+    label.Outline = true
+    label.Color = Color3.fromRGB(255, 255, 255) or color
+    label.Size = 22 or size
+    label.Text = text or "N/A"
+    label.Font = 2
+
+    local c1 
+
+    c1 = rs.RenderStepped:Connect(function()
+        if object and object:IsDescendantOf(workspace) and getgenv().esp then
+            local pos, onScreen = camera:WorldToViewportPoint(object.Position + Vector3.new(0, 2, 0))
+            
+            if onScreen then
+                label.Position = Vector2.new(pos.X, pos.Y)
+                label.Visible = true
+            else
+                label.Visible = false
+            end
+        else
+            label:Remove()
+            c1:Disconnect()
+        end
+    end)
+
+end
+
+function module.moveDirection()
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+
+    return humanoid.MoveDirection
+end
+
 
 return module 
