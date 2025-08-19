@@ -86,8 +86,8 @@ function module.objectESP(object,color,text,size,maxDistance)
     label.Visible = true
     label.Center = true
     label.Outline = true
-    label.Color = Color3.fromRGB(255, 255, 255) or color
-    label.Size = 22 or size
+    label.Color = color or Color3.fromRGB(255, 255, 255) 
+    label.Size = size or 22
     label.Text = text or "N/A"
     label.Font = 2
 
@@ -98,7 +98,8 @@ function module.objectESP(object,color,text,size,maxDistance)
             local pos, onScreen = camera:WorldToViewportPoint(object.Position + Vector3.new(0, 2, 0))
             local distance = module.getDistanceToObject(object)
 
-            if onScreen and distance <= (500 or maxDistance) then
+            if onScreen and distance <= (maxDistance or 500) then
+                
                 label.Position = Vector2.new(pos.X, pos.Y)
                 label.Visible = true
             else
