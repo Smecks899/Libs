@@ -78,7 +78,7 @@ end
 function module.objectESP(object,color,text,size,maxDistance)
     local part = Instance.new("Part",object)
     part.Name = "esp"
-    part.Size = Vector3(0,0,0)
+    part.Size = Vector3.new(0,0,0)
 
     --Main
     local label = Drawing.new("Text")
